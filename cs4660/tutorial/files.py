@@ -18,7 +18,7 @@ class SimpleFile(object):
         with zero)
         """
         x = list(map(int, self.numbers[line_number]))
-        return sum(x)/len(x)
+        return float(sum(x))/len(x)
 
     def get_max(self, line_number):
         """
