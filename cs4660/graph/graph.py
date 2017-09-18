@@ -189,15 +189,10 @@ class AdjacencyMatrix(object):
         else:
             self.nodes.append(node)
 
-            temp = self.adjacency_matrix
-            self.adjacency_matrix = [[0 for x in range(len(self.nodes))] for y in range(len(self.nodes))]
+            for list_i in self.adjacency_matrix:
+                list_i.append(0)
 
-            length = len(self.adjacency_matrix) if len(temp) > len(self.adjacency_matrix) else len(temp)
-
-            for i in range(length):
-                for j in range(length):
-                    if temp[i][j] != 0:
-                        self.adjacency_matrix[i][j] = temp[i][j]
+            self.adjacency_matrix.append([0 for x in range(len(self.nodes))])
 
             return True
 
@@ -307,7 +302,7 @@ def main():
 
     g.remove_node(Node(4))
 
-    print(g.nodes.index(Node(4)))
+    print(g.adjacency_matrix)
 
 if __name__ == "__main__":
     main()
