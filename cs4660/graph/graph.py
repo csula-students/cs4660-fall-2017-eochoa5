@@ -20,9 +20,8 @@ A Graph has following methods:
     - remove an edge from its internal data structure
     - returns true if the edge is removed and false if the edge does not exist
 """
-
 from io import open
-from operator import itemgetter
+
 def construct_graph_from_file(graph, file_path):
     """
     TODO: read content from file_path, then add nodes and edges to graph object
@@ -107,6 +106,9 @@ class AdjacencyList(object):
                     return True
         return False
 
+    def get_all_nodes(self):
+        return list(self.adjacency_list.keys())
+
     def neighbors(self, node):
         res = []
         if node in self.adjacency_list:
@@ -155,6 +157,12 @@ class AdjacencyList(object):
                 return True
         return False
 
+    def distance(self, node_1, node_2):
+        if node_1 in self.adjacency_list:
+            for edge in self.adjacency_list[node_1]:
+                if edge.to_node == node_2:
+                    return edge.weight
+
 
 class AdjacencyMatrix(object):
     def __init__(self):
@@ -164,6 +172,9 @@ class AdjacencyMatrix(object):
         # in additional to the matrix, you will also need to store a list of Nodes
         # as separate list of nodes
         self.nodes = []
+
+    def get_all_nodes(self):
+        return self.nodes
 
     def adjacent(self, node_1, node_2):
 
@@ -231,8 +242,17 @@ class AdjacencyMatrix(object):
             self.adjacency_matrix[index_from][index_to] = 0
             return True
 
+    def distance(self, node_1, node_2):
+        index_1 = self.__get_node_index(node_1)
+        index_2 = self.__get_node_index(node_2)
+
+        return self.adjacency_matrix[index_1][index_2]
+
     def __get_node_index(self, node):
         """helper method to find node index"""
+
+
+
         return self.nodes.index(node)
 
 class ObjectOriented(object):
@@ -295,14 +315,19 @@ class ObjectOriented(object):
         else:
             return False
 
+    def distance(self, node_1, node_2):
+        for edge in self.edges:
+            if edge.from_node == node_1 and edge.to_node == node_2:
+                return edge.weight
+
+    def get_all_nodes(self):
+        return self.nodes
+
 
 def main():
 
-    g = construct_graph_from_file(AdjacencyMatrix(),"../test/fixtures/graph-2.txt")
+    g = construct_graph_from_file(AdjacencyList(),"../test/fixtures/graph-1.txt")
 
-    g.remove_node(Node(4))
-
-    print(g.adjacency_matrix)
 
 if __name__ == "__main__":
     main()
