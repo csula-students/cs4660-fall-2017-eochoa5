@@ -114,73 +114,43 @@ def dijkstra_search(graph, initial_node, dest_node):
                         heapq.heappush(Q, PriorityEntry(alt, v))
 
 
-def a_star_search(graph, initial_node, dest_node):
-    """
-    A* Search
-    uses graph to do search from the initial_node to dest_node
-    returns a list of actions going from the initial node to dest_node
-    """
 
+def heuristic(dest_node, node):
 
-    closedSet = set()
-    openSet = {initial_node}
-    cameFrom = {}
-    gScore = {}
-    fScore = {}
+    x = abs(dest_node.data.x - node.data.x)
+    y = abs(dest_node.data.y - node.data.y)
 
-    for my_node in graph.get_all_nodes():
-        gScore[my_node] = sys.maxsize
-        fScore[my_node] = sys.maxsize
+    return x + y
 
-    # The cost of going from start to start is zero.
-    gScore[initial_node] = 0
+def a_star_search(graph, start, goal):
+    frontier = []
 
-    # For the first node, that value is completely heuristic.
-    fScore[initial_node] = heuristic_cost_estimate(initial_node, dest_node)
+    heapq.heappush(frontier, PriorityEntry(0, start))
 
-    while openSet:
-        current = find_node_min_fscore_in_openSet(openSet, fScore)
-        if current == dest_node:
-             return nodes_path_to_edges_path(graph, reconstruct_path(cameFrom, current))
+    came_from = {}
+    cost_so_far = {}
+    came_from[start] = None
+    cost_so_far[start] = 0
 
-        if current in openSet:
-            openSet.remove(current)
-        closedSet.add(current)
+    while frontier:
 
-        for neighbor in graph.neighbors(current):
-            if neighbor in closedSet:
-                continue		# Ignore the neighbor which is already evaluated.
+        current = heapq.heappop(frontier).node
 
-            if neighbor not in openSet:	# Discover a new node
-                openSet.add(neighbor)
+        if current == goal:
+            L =  reconstruct_path(came_from, current)
+            res = []
+            for i in range(1, len(L)-1):
+                res.append(gp.Edge(L[i], L[i+1], 1))
 
-            # The distance from start to a neighbor
-            tentative_gScore = gScore[current] + graph.distance(current, neighbor)
-            if tentative_gScore >= gScore[neighbor]:
-                continue
+            return res
 
-            cameFrom[neighbor] = current
-            gScore[neighbor] = tentative_gScore
-            fScore[neighbor] = gScore[neighbor] + heuristic_cost_estimate(neighbor, dest_node)
-
-def find_node_min_fscore_in_openSet(openSet, fScore):
-
-    answer = openSet.pop()
-    min = fScore[answer]
-
-    for node in openSet:
-        if fScore[node] < min:
-            answer = node
-
-    return answer
-
-
-def heuristic_cost_estimate(initial_node, dest_node):
-    dx = abs(initial_node.data.x - dest_node.data.x)
-    dy = abs(initial_node.data.y - dest_node.data.y)
-
-    return  dx + dy
-
+        for next in graph.neighbors(current):
+            new_cost = cost_so_far[current] + graph.distance(current, next)
+            if next not in cost_so_far or new_cost < cost_so_far[next]:
+                cost_so_far[next] = new_cost
+                priority = new_cost + heuristic(goal, next)
+                heapq.heappush(frontier, PriorityEntry(priority, next))
+                came_from[next] = current
 
 def reconstruct_path(cameFrom, current):
     total_path = [current]
@@ -195,7 +165,7 @@ def main():
     g = utils.parse_grid_file(gp.AdjacencyMatrix(), "../test/fixtures/grid-4.txt")
     print(g)
     as_test = a_star_search(g,
-                  gp.Node(utils.Tile(4, 0, "@1")),
+                    gp.Node(utils.Tile(4, 0, "@1")),
                 gp.Node(utils.Tile(6, 201, "@4")))
 
 

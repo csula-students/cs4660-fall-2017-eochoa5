@@ -85,21 +85,23 @@ def convert_edge_to_grid_actions(edges):
 
     answer = ""
 
-    for edge in edges:
-        x1 = edge.from_node.data.x
-        y1 = edge.from_node.data.y
+    if edges is not None:
 
-        x2 = edge.to_node.data.x
-        y2 = edge.to_node.data.y
+        for edge in edges:
+            x1 = edge.from_node.data.x
+            y1 = edge.from_node.data.y
 
-        if x2 > x1:
-            answer += "E"
-        elif x2 < x1:
-            answer += "W"
-        elif y2 > y1:
-            answer += "S"
-        elif y2 < y1:
-            answer += "N"
+            x2 = edge.to_node.data.x
+            y2 = edge.to_node.data.y
+
+            if x2 > x1:
+                answer += "E"
+            elif x2 < x1:
+                answer += "W"
+            elif y2 > y1:
+                answer += "S"
+            elif y2 < y1:
+                answer += "N"
 
     return answer
 
