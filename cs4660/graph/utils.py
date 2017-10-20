@@ -3,7 +3,7 @@ utils package is for some quick utility methods
 such as parsing
 """
 
-import graph as gp
+from . import graph as gp
 
 class Tile(object):
     """Node represents basic unit of graph"""

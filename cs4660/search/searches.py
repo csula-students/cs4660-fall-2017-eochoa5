@@ -6,8 +6,11 @@ from graph import graph as gp
 import sys
 import heapq
 from graph import utils
-from queue import PriorityQueue
-import math
+
+try:
+    from Queue import PriorityQueue
+except ImportError:
+    from queue import PriorityQueue
 
 class PriorityEntry(object):
 
