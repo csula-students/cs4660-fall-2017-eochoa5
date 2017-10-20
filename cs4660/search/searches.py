@@ -56,7 +56,8 @@ def dfs_helper(graph, initial_node, dest_node, path=None):
             neighbors.remove(p)
 
     for node in neighbors:
-        yield from dfs_helper(graph, node, dest_node, path + [node])
+        for x in  dfs_helper(graph, node, dest_node, path + [node]):
+            yield x
 
 
 def dfs(graph, initial_node, dest_node):
